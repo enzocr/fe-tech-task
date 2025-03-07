@@ -16,24 +16,13 @@ export class ProductService extends BaseService<IProduct> {
   }
 
   public search: ISearch = {
-    page: 0,
+    page: 1,
     size: 5
   }
   public totalItems: any = [];
   private authService: AuthService = inject(AuthService);
   private alertService: AlertService = inject(AlertService);
 
-
-  getAll() {
-    this.findAll().subscribe({
-      next: (response: IResponse<IProduct[]>) => {
-        this.productsSignal.set(response.data);
-      },
-      error: (err: any) => {
-        console.error('Error fetching all categories', err);
-      }
-    });
-  }
 
   getAllPaginated() {
     this.paginated(this.search).subscribe({
@@ -83,7 +72,7 @@ export class ProductService extends BaseService<IProduct> {
     this.editCustomSource(`${item.id}`, productRequest).subscribe({
       next: (response: any) => {
         this.alertService.displayAlert('success', response.message, 'center', 'top', ['success-snackbar']);
-        this.getAll();
+        this.getAllPaginated();
       },
       error: (err: any) => {
         this.alertService.displayAlert('error', 'An error occurred updating the product', 'center', 'top', ['error-snackbar']);
